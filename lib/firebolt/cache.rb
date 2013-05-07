@@ -6,13 +6,8 @@ require 'firebolt/cache/warmer'
 module Firebolt
   module Cache
 
-    def self.cache_key(type)
-      "#{::Firebolt.config.namespace}.#{type}"
-    end
-
-    def self.entry_key_prefix(salt = nil)
-      salt ||= self.salt
-      "#{cache_key(:entry)}.#{salt}"
+    def self.cache_key(suffix)
+      "#{::Firebolt.config.namespace}.#{suffix}"
     end
 
     def self.keys_key
