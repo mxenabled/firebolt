@@ -36,7 +36,7 @@ module Firebolt
     end
 
     # Initial warming
-    if ::Firebolt.config.file_warmer_enabled
+    if ::Firebolt.config.cache_file_enabled?
       ::Firebolt::CacheWarmer.warm(::Firebolt::FileWarmer.new)
     else
       ::Firebolt::CacheWarmer.warm
