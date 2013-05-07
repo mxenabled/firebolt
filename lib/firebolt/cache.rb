@@ -13,12 +13,22 @@ module Firebolt
       ::Firebolt.config.frequency + 1.hour
     end
 
+    def self.fetch(suffix, options = nil, &block)
+      key = self.salted_cache_key(suffix)
+      ::Firebolt.config.cache.fetch(key, &block)
+    end
+
     def self.generate_salt
       ::SecureRandom.hex
     end
 
     def self.keys_key
       cache_key(:keys)
+    end
+
+    def self.read(suffix, options = nil)
+      key = self.salted_cache_key(suffix)
+      ::Firebolt.config.cache.read(key, options)
     end
 
     def self.reset_salt!(new_salt)
