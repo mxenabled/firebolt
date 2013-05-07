@@ -1,5 +1,3 @@
-require 'secure_random'
-
 module Firebolt
   class Cache
     def self.cache_key(key_suffix)
