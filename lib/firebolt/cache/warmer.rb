@@ -4,10 +4,24 @@ module Firebolt
 
       attr_reader :salt
 
+      ##
+      # Constructor
+      #
       def initialize(salt)
         @salt = salt
       end
 
+      ##
+      # Public class methods
+      #
+      def self.warm(salt)
+        warmer = self.new(salt)
+        warmer.warm
+      end
+
+      ##
+      # Public instance methods
+      #
       def cache
         ::Firebolt.config.cache
       end
@@ -38,10 +52,10 @@ module Firebolt
       end
 
       def track_keys(new_keys)
-        keys = cache.read(::Firebolt::Cache.keys_key) || []
+        keys = cache.read(::Firebolt::Cache.known_keys_key) || []
         keys += new_keys
 
-        cache.write(::Firebolt::Cache.keys_key, keys)
+        cache.write(::Firebolt::Cache.known_keys_key, keys)
       end
     end
   end

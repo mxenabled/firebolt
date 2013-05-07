@@ -6,13 +6,9 @@ module Firebolt
       current_salt = ::Firebolt::Cache.salt
       new_salt = ::Firebolt::Cache.generate_salt
 
-      cache_warmer = ::Firebolt::Cache::Warmer.new(new_salt)
-      cache_warmer.warm
-
+      ::Firebolt::Cache::Warmer.warm(new_salt)
       ::Firebolt::Cache.reset_salt!(new_salt)
-
-      cache_sweeper = ::Firebolt::Cache::Sweeper.new(current_salt)
-      cache_sweeper.sweep!
+      ::Firebolt::Cache::Sweeper.sweep!(current_salt)
     end
   end
 end
