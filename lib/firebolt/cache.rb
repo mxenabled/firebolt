@@ -1,10 +1,9 @@
 require 'secure_random'
 
-require 'firebolt/cache/sweeper'
 require 'firebolt/cache/warmer'
 
 module Firebolt
-  module Cache
+  class Cache
     def self.cache_key(suffix)
       "#{::Firebolt.config.namespace}.#{suffix}"
     end
