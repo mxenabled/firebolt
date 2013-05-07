@@ -48,7 +48,7 @@ module Firebolt
       end
 
       def salted_cache_key(suffix)
-        ::Firebolt::Cache.salted_cache_key(suffix)
+        ::Firebolt::Cache.cache_key_with_salt(suffix, salt)
       end
     end
   end

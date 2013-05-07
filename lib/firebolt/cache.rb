@@ -22,6 +22,10 @@ module Firebolt
       ::SecureRandom.hex
     end
 
+    def self.cache_key_with_salt(suffix, salt)
+      self.cache_key("#{salt}.#{suffix}")
+    end
+
     def self.keys_key
       cache_key(:keys)
     end
@@ -49,7 +53,7 @@ module Firebolt
       salt_prefix = self.salt
       return nil if salt_prefix.nil?
 
-      self.cache_key("#{salt_prefix}.#{suffix}")
+      self.cache_key_with_salt(suffix, salt_prefix)
     end
   end
 end
