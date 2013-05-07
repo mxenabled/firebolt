@@ -7,16 +7,16 @@ module Firebolt
       ##
       # Constructor
       #
-      def initialize(salt)
-        @salt = salt
+      def initialize
+        @salt = ::Firebolt::Cache.generate_salt
       end
 
       ##
       # Public class methods
       #
-      def self.warm(salt)
-        warmer = self.new(salt)
-        warmer.warm
+      def self.warm(&warmer)
+        warmer = self.new
+        warmer.warm(&warmer)
       end
 
       ##
@@ -26,7 +26,8 @@ module Firebolt
         ::Firebolt.config.cache
       end
 
-      def warm
+      def warm(&warmer)
+        warmer ||= default_warmer
         results = warmer.call
 
         raise RuntimeError, "Warmer must return an object that responds to #each_pair." unless results.respond_to?(:each_pair)
@@ -35,13 +36,15 @@ module Firebolt
           cache_key = salted_cache_key(key)
           cache.write(cache_key, value, :expires_in => expires_in)
         end
-      end
 
-      def warmer
-        ::Firebolt.config.warmer
+        ::Firebolt::Cache.reset_salt!(salt)
       end
 
     private
+
+      def default_warmer
+        ::Firebolt.config.warmer
+      end
 
       def expires_in
         @expires_in ||= ::Firebolt::Cache.expires_in
