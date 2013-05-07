@@ -26,7 +26,7 @@ module Firebolt
   def self.initialize!
     # Setup Suckerpunch
     ::SuckerPunch.config do
-      queue :name => :firebolt_queue, :worker => ::Firebolt::Cache::Warmer, :workers => 1
+      queue :name => :firebolt_queue, :worker => ::Firebolt::CacheWarmer, :workers => 1
     end
 
     # Setup Rufus
@@ -36,6 +36,10 @@ module Firebolt
     end
 
     # Initial warming
-    ::Firbolt::Warmer.warm
+    if ::Firebolt.config.file_warmer_enabled
+      ::Firebolt::CacheWarmer.warm(::Firebolt::FileWarmer.new)
+    else
+      ::Firebolt::CacheWarmer.warm
+    end
   end
 end
