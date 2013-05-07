@@ -1,10 +1,10 @@
 module Firebolt
   module Cache
     class Sweeper
-      attr_reader :matcher
+      attr_reader :salt
 
-      def initialize(matcher)
-        @matcher = /^#{::Regexp.escape(matcher)}\./
+      def initialize(salt)
+        @salt = salt
       end
 
       def sweep!
@@ -17,6 +17,11 @@ module Firebolt
 
       def cache
         ::Firebolt.config.cache
+      end
+
+      def salted_key_matcher
+        salted_key_prefix = ::Firebolt::Cache.cache_key(salt)
+        /^#{::Regexp.escape(salted_key_prefix)}\./
       end
 
       def keys_to_sweep
