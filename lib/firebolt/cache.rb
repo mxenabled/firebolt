@@ -28,6 +28,8 @@ module Firebolt
 
     def self.read(suffix, options = nil)
       key = self.salted_cache_key(suffix)
+      return nil if key.nil?
+
       ::Firebolt.config.cache.read(key, options)
     end
 
@@ -36,9 +38,7 @@ module Firebolt
     end
 
     def self.salt
-      ::Firebolt.config.cache.fetch(self.salt_key) do
-        self.generate_salt
-      end
+      ::Firebolt.config.cache.read(self.salt_key)
     end
 
     def self.salt_key
@@ -46,7 +46,10 @@ module Firebolt
     end
 
     def self.salted_cache_key(suffix)
-      self.cache_key("#{self.salt}.#{suffix}")
+      salt_prefix = self.salt
+      return nil if salt_prefix.nil?
+
+      self.cache_key("#{salt_prefix}.#{suffix}")
     end
   end
 end
