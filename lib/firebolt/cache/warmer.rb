@@ -1,6 +1,7 @@
 module Firebolt
   module Cache
     class Warmer
+      include ::SuckerPunch::Worker
 
       attr_reader :salt
 
@@ -26,7 +27,7 @@ module Firebolt
         ::Firebolt.config.cache
       end
 
-      def warm(&warmer)
+      def perform(&warmer)
         warmer ||= default_warmer
         results = warmer.call
 

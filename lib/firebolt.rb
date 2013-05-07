@@ -25,7 +25,7 @@ module Firebolt
   def self.initialize!
     # Setup Suckerpunch
     ::SuckerPunch.config do
-      queue :name => :firebolt_queue, :worker => ::Firebolt::Cache::Worker, :workers => 1
+      queue :name => :firebolt_queue, :worker => ::Firebolt::Cache::Warmer, :workers => 1
     end
 
     # Setup Rufus
