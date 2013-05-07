@@ -1,7 +1,12 @@
-require "firebolt/version"
-require 'firebolt/config'
+require 'json'
+require 'secure_random'
+
 require 'firebolt/cache'
 require 'firebolt/cache_warmer'
+require 'firebolt/cache_worker'
+require 'firebolt/config'
+
+require "firebolt/version"
 
 module Firebolt
   # Using a mutex to control access while creating a ::Firebolt::Config
@@ -24,9 +29,9 @@ module Firebolt
   end
 
   def self.initialize!
-    # Setup Suckerpunch
+    # Setup SuckerPunch
     ::SuckerPunch.config do
-      queue :name => :firebolt_queue, :worker => ::Firebolt::CacheWarmer, :workers => 1
+      queue :name => :firebolt_queue, :worker => ::Firebolt::CacheWorker, :workers => 1
     end
 
     # Setup Rufus
@@ -37,9 +42,9 @@ module Firebolt
 
     # Initial warming
     if ::Firebolt.config.cache_file_enabled?
-      ::Firebolt::CacheWarmer.warm(::Firebolt::FileWarmer.new)
+      ::Firebolt::CacheWorker.perform(::Firebolt::FileWarmer.new)
     else
-      ::Firebolt::CacheWarmer.warm
+      ::Firebolt::CacheWorker.perform
     end
   end
 end
