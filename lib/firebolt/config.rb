@@ -1,11 +1,14 @@
 module Firebolt
   class Config < Hash
+    CACHE_FILENAME = "firebolt.cache.json".freeze
+
     ##
     # Constructor!
     #
     def initialize(options = {})
       merge!(options)
 
+      self[:cache_file_path] ||= '/tmp'
       self[:namespace] ||= ::SecureRandom.hex
     end
 
@@ -40,11 +43,19 @@ module Firebolt
       end
     end
 
-    hash_accessor :cache, :frequency, :file_warmer_enabled, :file_warmer_path, :namespace, :warmer
+    hash_accessor :cache, :frequency, :cache_file_enabled, :cache_file_path, :namespace, :warmer
 
     ##
     # Public instance methods
     #
+    def cache_file
+      ::File.join(self[:cache_file_path], CACHE_FILENAME)
+    end
+
+    def cache_file_enabled?
+      !! ::Firebolt.config.cache_file_enabled
+    end
+
     def namespace
       @namespace ||= "firebolt.#{self[:namespace]}"
     end
