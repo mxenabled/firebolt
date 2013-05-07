@@ -1,6 +1,7 @@
 require "firebolt/version"
 require 'firebolt/config'
 require 'firebolt/cache'
+require 'firebolt/cache_warmer'
 
 module Firebolt
   # Using a mutex to control access while creating a ::Firebolt::Config
