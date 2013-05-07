@@ -25,10 +25,11 @@ module Firebolt
     def perform(&warmer)
       results = warm(&warmer)
 
-      # Write file if file warmer enabled...
-      ::File.open(..., 'w') do |file|
-        json_results = ::JSON.dump(results)
-        file.write(json_results)
+      if write_to_cache_file?
+        ::File.open(cache_file, 'w') do |file|
+          json_results = ::JSON.dump(results)
+          file.write(json_results)
+        end
       end
 
       ::Firebolt::Cache.reset_salt!(salt)
@@ -54,6 +55,10 @@ module Firebolt
       ::Firebolt.config.cache
     end
 
+    def cache_file
+      ::Firebolt.config.cache_file
+    end
+
     def default_warmer
       ::Firebolt.config.warmer
     end
@@ -68,6 +73,10 @@ module Firebolt
 
     def salted_cache_key(suffix)
       ::Firebolt::Cache.cache_key_with_salt(suffix, salt)
+    end
+
+    def write_to_cache_file?
+      ::Firebolt.config.cache_file_enabled?
     end
   end
 end
