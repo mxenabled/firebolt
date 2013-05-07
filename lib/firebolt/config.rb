@@ -1,7 +1,17 @@
 module Firebolt
   class Config < Hash
+    ##
+    # Constructor!
+    #
+    def initialize(options = {})
+      merge!(options)
 
+      self[:namespace] ||= ::SecureRandom.hex
+    end
 
+    ##
+    # Class methods
+    #
 
     # Creates an accessor that simply sets and reads a key in the hash:
     #
@@ -30,13 +40,19 @@ module Firebolt
       end
     end
 
-    hash_accessor :frequency, :file_warmer_enabled, :file_warmer_path, :cache
+    hash_accessor :cache, :frequency, :file_warmer_enabled, :file_warmer_path, :namespace, :warmer
 
-    def initialize(options = {})
-      merge!(options)
-
-      #self[:insert_after_middleware] ||= ::Rails::Rack::Logger
+    ##
+    # Public instance methods
+    #
+    def namespace
+      @namespace ||= "firebolt.#{self[:namespace]}"
     end
 
+    def warmer=(value)
+      raise ArgumentError, "Warmer must respond to `call`." unless value.respond_to?(:call)
+
+      self[:warmer] = value
+    end
   end
 end
