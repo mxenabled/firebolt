@@ -5,17 +5,20 @@ require 'firebolt/cache/warmer'
 
 module Firebolt
   module Cache
-
     def self.cache_key(suffix)
       "#{::Firebolt.config.namespace}.#{suffix}"
     end
 
-    def self.keys_key
-      cache_key(:keys)
+    def self.expires_in
+      ::Firebolt.config.frequency + 1.hour
     end
 
     def self.generate_salt
       ::SecureRandom.hex
+    end
+
+    def self.keys_key
+      cache_key(:keys)
     end
 
     def self.reset_salt!(new_salt)

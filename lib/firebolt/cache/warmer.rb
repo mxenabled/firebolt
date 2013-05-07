@@ -27,18 +27,14 @@ module Firebolt
       end
 
       def warm
-        new_keys = []
         results = warmer.call
 
         raise RuntimeError, "Warmer must return an object that responds to #each_pair." unless results.respond_to?(:each_pair)
 
         results.each_pair do |key, value|
           cache_key = salted_cache_key(key)
-          cache.write(cache_key, value)
-          new_keys << cache_key
+          cache.write(cache_key, value, :expires_in => expires_in)
         end
-
-        track_keys(new_keys)
       end
 
       def warmer
@@ -47,15 +43,12 @@ module Firebolt
 
     private
 
-      def salted_cache_key(suffix)
-        ::Firebolt::Cache.cache_key("#{salt}.#{suffix}")
+      def expires_in
+        @expires_in ||= ::Firebolt::Cache.expires_in
       end
 
-      def track_keys(new_keys)
-        keys = cache.read(::Firebolt::Cache.known_keys_key) || []
-        keys += new_keys
-
-        cache.write(::Firebolt::Cache.known_keys_key, keys)
+      def salted_cache_key(suffix)
+        ::Firebolt::Cache.cache_key("#{salt}.#{suffix}")
       end
     end
   end
