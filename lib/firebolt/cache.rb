@@ -34,5 +34,9 @@ module Firebolt
     def self.salt_key
       cache_key(:salt)
     end
+
+    def self.salted_cache_key(suffix)
+      self.cache_key("#{self.salt}.#{suffix}")
+    end
   end
 end
