@@ -21,4 +21,20 @@ module Firebolt
       yield(config)
     end
   end
+
+  def self.initialize!
+    # Setup Suckerpunch
+    ::SuckerPunch.config do
+      queue :name => :firebolt_queue, :worker => ::Firebolt::Cache::Worker, :workers => 1
+    end
+
+    # Setup Rufus
+    frequency = ::Rufus.to_time_string(::Firebolt.config.frequency)
+    ::Rufus::Scheduler.start_new.every(frequency) do
+      ::SuckerPunch::Queue[:firebolt_queue].async.perform
+    end
+
+    # Initial warming
+    ::Firbolt::Warmer.warm
+  end
 end
