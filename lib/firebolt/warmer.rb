@@ -1,13 +1,5 @@
 module Firebolt
-  class Warmer
-    ##
-    # Public class methods
-    #
-    def self.warm
-      warmer = self.new
-      warmer.warm
-    end
-
+  module Warmer
     ##
     # Public instance methods
     #

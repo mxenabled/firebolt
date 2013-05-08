@@ -1,5 +1,7 @@
 module Firebolt
-  class FileWarmer < Warmer
+  class FileWarmer
+    include ::Firebolt::Warmer
+
     def perform
       return nil unless cache_file_exists?
 
