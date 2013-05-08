@@ -1,5 +1,7 @@
 module Firebolt
   module Warmer
+    include ::Firebolt::Keys
+
     ##
     # Public instance methods
     #
@@ -34,7 +36,7 @@ module Firebolt
     end
 
     def _warmer_salted_cache_key(suffix)
-      ::Firebolt::Cache.cache_key_with_salt(suffix, _warmer_salt)
+      cache_key_with_salt(suffix, _warmer_salt)
     end
 
     def _warmer_write_results_to_cache(results)

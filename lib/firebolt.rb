@@ -5,6 +5,7 @@ require 'firebolt/cache'
 require 'firebolt/cache_worker'
 require 'firebolt/config'
 require 'firebolt/file_warmer'
+require 'firebolt/keys'
 require 'firebolt/warmer'
 
 require "firebolt/version"
