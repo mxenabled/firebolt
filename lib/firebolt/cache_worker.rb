@@ -2,8 +2,9 @@ module Firebolt
   class CacheWorker
     include ::SuckerPunch::Worker
 
-    def perform(cache_warmer = nil)
-      results = ::Firebolt::CacheStore.warm(cache_warmer)
+    def perform(warmer_class)
+      cache_warmer = warmer_class.new
+      results = cache_warmer.warm
       return unless write_results_to_cache_file?
 
       write_results_to_cache_file(results)
