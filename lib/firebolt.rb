@@ -28,22 +28,31 @@ module Firebolt
     ::Thread.exclusive do
       yield(config)
     end
+
+    configure_sucker_punch
   end
 
-  def self.initialize!
-    # Setup SuckerPunch
+  def self.configure_sucker_punch
     ::SuckerPunch.config do
       queue :name => :firebolt_queue, :worker => ::Firebolt::CacheWorker, :workers => 1
     end
+  end
 
-    # Setup Rufus
+  def self.initialize_rufus_scheduler
     frequency = ::Rufus.to_time_string(config.frequency)
+
     ::Rufus::Scheduler.start_new.every(frequency) do
       ::SuckerPunch::Queue[:firebolt_queue].async.perform(config.warmer)
     end
+  end
+
+  def self.initialize!(&block)
+    configure(&block) if block_given?
+
+    initialize_rufus_scheduler
 
     # Initial warming
-    warmer = ::Firebolt.config.cache_file_enabled? ? ::Firebolt::FileWarmer : config.warmer
+    warmer = config.cache_file_enabled? ? ::Firebolt::FileWarmer : config.warmer
     ::SuckerPunch::Queue[:firebolt_queue].async.perform(warmer)
   end
 end
