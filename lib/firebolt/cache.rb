@@ -8,17 +8,11 @@ module Firebolt
       "#{::Firebolt.config.namespace}.#{salt}.#{key_suffix}"
     end
 
-    def self.expires_in
-      ::Firebolt.config.frequency + 1.hour
-    end
-
     def self.fetch(suffix, options = nil, &block)
       key = self.salted_cache_key(suffix)
-      ::Firebolt.config.cache.fetch(key, &block)
-    end
+      return nil if key.nil?
 
-    def self.generate_salt
-      ::SecureRandom.hex
+      ::Firebolt.config.cache.fetch(key, options, &block)
     end
 
     def self.keys_key
