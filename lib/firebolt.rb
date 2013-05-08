@@ -35,16 +35,13 @@ module Firebolt
     end
 
     # Setup Rufus
-    frequency = ::Rufus.to_time_string(::Firebolt.config.frequency)
+    frequency = ::Rufus.to_time_string(config.frequency)
     ::Rufus::Scheduler.start_new.every(frequency) do
-      ::SuckerPunch::Queue[:firebolt_queue].async.perform
+      ::SuckerPunch::Queue[:firebolt_queue].async.perform(config.warmer)
     end
 
     # Initial warming
-    if ::Firebolt.config.cache_file_enabled?
-      ::Firebolt::CacheWorker.perform(::Firebolt::FileWarmer.new)
-    else
-      ::Firebolt::CacheWorker.perform
-    end
+    warmer = ::Firebolt.config.cache_file_enabled? ? ::Firebolt::FileWarmer : config.warmer
+    ::SuckerPunch::Queue[:firebolt_queue].async.perform(warmer)
   end
 end
