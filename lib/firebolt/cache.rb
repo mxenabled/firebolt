@@ -1,6 +1,6 @@
 module Firebolt
   module Cache
-    extend ::Firebolt::Keys
+    include ::Firebolt::Keys
 
     def fetch(suffix, options = nil, &block)
       salted_key = self.cache_key_with_salt(key_suffix, salt)
