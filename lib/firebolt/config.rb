@@ -48,6 +48,7 @@ module Firebolt
     ##
     # Public instance methods
     #
+
     def cache_file
       ::File.join(self[:cache_file_path], CACHE_FILENAME)
     end

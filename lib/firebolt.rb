@@ -41,6 +41,7 @@ module Firebolt
   end
 
   def self.initialize_rufus_scheduler
+
     frequency = ::Rufus.to_time_string(config.frequency)
 
     ::Rufus::Scheduler.start_new.every(frequency) do
@@ -49,6 +50,7 @@ module Firebolt
   end
 
   def self.initialize!(&block)
+    return if initialized?
     configure(&block) if block_given?
 
 
@@ -58,5 +60,21 @@ module Firebolt
     # Initial warming
     warmer = config.cache_file_enabled? ? ::Firebolt::FileWarmer : config.warmer
     ::SuckerPunch::Queue[:firebolt_queue].async.perform(warmer)
+
+    initialized!
   end
+
+  def self.initialized!
+    return @initialized unless @initialized.nil?
+
+    @firebolt_mutex.synchronize do
+      @initialized = true if @initialized.nil?
+    end
+
+  end
+
+  def self.initialized?
+    !! @initialized
+  end
+
 end
