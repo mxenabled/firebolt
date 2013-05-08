@@ -2,20 +2,21 @@ require 'json'
 require 'secure_random'
 
 require 'firebolt/cache'
-require 'firebolt/cache_warmer'
 require 'firebolt/cache_worker'
 require 'firebolt/config'
+require 'firebolt/file_warmer'
+require 'firebolt/warmer'
 
 require "firebolt/version"
 
 module Firebolt
   # Using a mutex to control access while creating a ::Firebolt::Config
-  @minimus_mutex = ::Mutex.new
+  @firebolt_mutex = ::Mutex.new
 
   def self.config
     return @config unless @config.nil?
 
-    @minimus_mutex.synchronize do
+    @firebolt_mutex.synchronize do
       @config = ::Firebolt::Config.new if @config.nil?
     end
 
