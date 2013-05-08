@@ -28,7 +28,7 @@ module Firebolt
     end
 
     def _warmer_reset_salt!
-      ::Firebolt::Cache.reset_salt!(salt)
+      ::Firebolt.reset_salt!(salt)
     end
 
     def _warmer_salt

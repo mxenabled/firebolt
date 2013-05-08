@@ -1,16 +1,18 @@
-require 'json'
-require 'secure_random'
+require "json"
+require "secure_random"
 
-require 'firebolt/cache'
-require 'firebolt/cache_worker'
-require 'firebolt/config'
-require 'firebolt/file_warmer'
-require 'firebolt/keys'
-require 'firebolt/warmer'
+require "firebolt/cache"
+require "firebolt/cache_worker"
+require "firebolt/config"
+require "firebolt/file_warmer"
+require "firebolt/keys"
+require "firebolt/warmer"
 
 require "firebolt/version"
 
 module Firebolt
+  extend ::Firebolt::Cache
+
   # Using a mutex to control access while creating a ::Firebolt::Config
   @firebolt_mutex = ::Mutex.new
 
