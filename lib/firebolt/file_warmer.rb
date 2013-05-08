@@ -1,17 +1,19 @@
 module Firebolt
-  class FileWarmer
-    def call
-      if ::File.exists?(cache_file)
-        parsed_contents
-      else
-        ::Firebolt::Warmer.new.call
-      end
+  class FileWarmer < Warmer
+    def perform
+      return nil unless cache_file_exists?
+
+      return parsed_contents
     end
 
   private
 
     def cache_file
       ::Firebolt.config.cache_file
+    end
+
+    def cache_file_exists?
+      ::File.exists?(cache_file)
     end
 
     def file_contents
