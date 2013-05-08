@@ -1,3 +1,3 @@
 module Firebolt
-  VERSION = "0.0.1.md"
+  VERSION = "0.0.2.md"
 end
