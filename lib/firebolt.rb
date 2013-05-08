@@ -53,6 +53,9 @@ module Firebolt
     return if initialized?
     configure(&block) if block_given?
 
+    raise "Firebolt.config.frequency has not been set" unless config.frequency
+    raise "Firebolt.config.warmer has not been set" unless config.warmer
+    raise "Firebolt.config.cache has not been set" unless config.cache
 
     configure_sucker_punch
     initialize_rufus_scheduler
@@ -71,6 +74,7 @@ module Firebolt
       @initialized = true if @initialized.nil?
     end
 
+    return @initialized
   end
 
   def self.initialized?
