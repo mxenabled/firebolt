@@ -32,8 +32,6 @@ module Firebolt
     ::Thread.exclusive do
       yield(config)
     end
-
-    configure_sucker_punch
   end
 
   def self.configure_sucker_punch
@@ -53,6 +51,8 @@ module Firebolt
   def self.initialize!(&block)
     configure(&block) if block_given?
 
+
+    configure_sucker_punch
     initialize_rufus_scheduler
 
     # Initial warming
