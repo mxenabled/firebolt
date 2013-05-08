@@ -21,7 +21,7 @@ module Firebolt
     end
 
     def salt
-      self.read(self.salt_key)
+      ::Firebolt.config.cache.read(self.salt_key)
     end
   end
 end
