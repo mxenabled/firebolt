@@ -6,8 +6,8 @@ module Firebolt
     def warm
       results = perform
 
-      write_results_to_cache(results)
-      reset_salt!
+      _warmer_write_results_to_cache(results)
+      _warmer_reset_salt!
 
       results
     end
@@ -17,31 +17,31 @@ module Firebolt
     ##
     # Private instance methods
     #
-    def expires_in
-      @expires_in ||= ::Firebolt.config.frequency + 1.hour
+    def _warmer_expires_in
+      @_warmer_expires_in ||= ::Firebolt.config.frequency + 1.hour
     end
 
-    def raise_failed_result
+    def _warmer_raise_failed_result
       raise "Warmer must return an object that responds to #each_pair."
     end
 
-    def reset_salt!
+    def _warmer_reset_salt!
       ::Firebolt::Cache.reset_salt!(salt)
     end
 
-    def salt
-      @salt ||= ::SecureRandom.hex
+    def _warmer_salt
+      @_warmer_salt ||= ::SecureRandom.hex
     end
 
-    def salted_cache_key(suffix)
-      ::Firebolt::Cache.cache_key_with_salt(suffix, salt)
+    def _warmer_salted_cache_key(suffix)
+      ::Firebolt::Cache.cache_key_with_salt(suffix, _warmer_salt)
     end
 
-    def write_results_to_cache(results)
-      raise_failed_result unless results.respond_to?(:each_pair)
+    def _warmer_write_results_to_cache(results)
+      _warmer_raise_failed_result unless results.respond_to?(:each_pair)
 
       results.each_pair do |key, value|
-        cache_key = salted_cache_key(key)
+        cache_key = _warmer_salted_cache_key(key)
         ::Firebolt.config.cache.write(cache_key, value, :expires_in => expires_in)
       end
     end
