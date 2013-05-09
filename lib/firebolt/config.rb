@@ -72,7 +72,8 @@ module Firebolt
     end
 
     def warmer=(value)
-      raise ArgumentError, "Warmer must respond to `call`." unless value.respond_to?(:call)
+      raise ArgumentError, "Warmer must include the ::Firebolt::Warmer module." unless value.ancestors.include?(::Firebolt::Warmer)
+      raise ArgumentError, "Warmer must respond to `perform`." unless value.instance_methods.include?(:perform)
 
       self[:warmer] = value
     end
