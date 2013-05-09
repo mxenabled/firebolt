@@ -36,7 +36,7 @@ module Firebolt
 
   def self.configure_sucker_punch
     ::SuckerPunch.config do
-      queue :name => :firebolt_queue, :worker => ::Firebolt::CacheWorker, :workers => 1
+      queue :name => :firebolt_queue, :worker => ::Firebolt::CacheWorker, :workers => 2
     end
   end
 
