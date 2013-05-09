@@ -61,7 +61,7 @@ module Firebolt
     initialize_rufus_scheduler
 
     # Initial warming
-    warmer = config.cache_file_enabled? ? ::Firebolt::FileWarmer : config.warmer
+    warmer = config.cache_file_readable? ? ::Firebolt::FileWarmer : config.warmer
     ::SuckerPunch::Queue[:firebolt_queue].async.perform(warmer)
 
     initialized!

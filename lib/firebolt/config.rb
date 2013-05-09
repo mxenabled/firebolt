@@ -63,6 +63,10 @@ module Firebolt
       self[:cache_file_path] = path
     end
 
+    def cache_file_readable?
+      ::File.readable?(cache_file)
+    end
+
     def namespace
       @namespace ||= "firebolt.#{self[:namespace]}"
     end
