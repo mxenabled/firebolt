@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "firebolt"
   spec.version       = Firebolt::VERSION
   spec.authors       = ["Adam Hutchison","BJ Neilsen"]
-  spec.email         = ["adam@moneydesktop.com","bj@moneydesktop.com"]
+  spec.email         = ["liveh2o@gmail.com","bj.neilsen@gmail.com"]
   spec.description   = %q{Simple little cache warmer.}
   spec.summary       = %q{Firebolt is a simple cache warmer. It warms the cache using a specially defined warmer class.}
   spec.homepage      = "https://github.com/moneydesktop/firebolt"
