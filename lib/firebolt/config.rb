@@ -57,6 +57,12 @@ module Firebolt
       !! ::Firebolt.config.cache_file_enabled
     end
 
+    def cache_file_path=(path)
+      raise ArgumentError, "Directory '#{path}' does not exist or is not writable." unless ::File.writable?(path)
+
+      self[:cache_file_path] = path
+    end
+
     def namespace
       @namespace ||= "firebolt.#{self[:namespace]}"
     end
