@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Firebolt::VERSION
   spec.authors       = ["Adam Hutchison","BJ Neilsen"]
   spec.email         = ["dev@moneydesktop.com"]
-  spec.description   = %q{Simple little cache sweeper/warmer.}
-  spec.summary       = %q{Firebolt is a simple cache sweeper & warmer. It sweeps the cache based on a given key and warms the cache using a specially defined class.}
-  spec.homepage      = "https://git.moneydesktop.com/dev/firebolt"
+  spec.description   = %q{Simple little cache warmer.}
+  spec.summary       = %q{Firebolt is a simple cache warmer. It warms the cache using a specially defined warmer class.}
+  spec.homepage      = "https://github.com/moneydesktop/firebolt"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -27,9 +27,5 @@ Gem::Specification.new do |spec|
   ##
   # Development Dependencies
   #
-  spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
-  spec.add_development_dependency "rspec"
-  spec.add_development_dependency "better_receive"
-  spec.add_development_dependency "special_delivery"
 end
