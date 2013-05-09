@@ -28,7 +28,7 @@ module Firebolt
     end
 
     def _warmer_reset_salt!
-      ::Firebolt.reset_salt!(salt)
+      ::Firebolt.reset_salt!(_warmer_salt)
     end
 
     def _warmer_salt
@@ -44,7 +44,7 @@ module Firebolt
 
       results.each_pair do |key, value|
         cache_key = _warmer_salted_cache_key(key)
-        ::Firebolt.config.cache.write(cache_key, value, :expires_in => expires_in)
+        ::Firebolt.config.cache.write(cache_key, value, :expires_in => _warmer_expires_in)
       end
     end
   end
