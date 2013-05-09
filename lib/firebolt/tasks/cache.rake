@@ -24,6 +24,7 @@ namespace :firebolt do
       end
     end
 
+    desc 'Warm the cache with a new salt'
     task :warm do
       ::Firebolt.initialize!
       warmer = ::Firebolt.config.warmer
