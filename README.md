@@ -41,11 +41,14 @@ To use Firebolt, you first need to configure it:
 
 ```Ruby
 ::Firebolt.configure do |config|
+  # Required
   config.cache = ::Rails.cache # Or anything that adheres to Rails's cache interface
-  config.cache_file_enabled = true # Automatically enabled when cache_file_path is set
-  config.cache_file_path = '/path/to/your/project/tmp' # Defaults to /tmp
   config.warming_frequency = 12.hours # In seconds. Get minutes/hours/days helper w/ ActiveSupport
   config.warmer = ::YourAwesomeCacheWarmer
+
+  # Optional
+  config.cache_file_enabled = true # Automatically enabled when cache_file_path is set
+  config.cache_file_path = '/path/to/your/project/tmp' # Defaults to /tmp
 end
 ```
 
