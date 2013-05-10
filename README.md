@@ -55,9 +55,10 @@ end
 Then you need to initialize it:
 
 ```Ruby
-# Calling initialize! sets up the queues and starts the warming cycle.
-# If you want to skip this step during spec runs (or somewhere else), set FIREBOLT_SKIP_WARMING to true.
-# Warming is automatically skipped during spec runs in Rails apps.
+# Calling initialize! starts the warming cycle.
+# It's best to skip the warming cycle while running specs. Warming is
+# automatically skipped while running specs in Rails apps. In other apps, set
+# FIREBOLT_SKIP_WARMING to true (or 1, or 'sandwich').
 ::Firebolt.initialize!
 
 # Also takes a block so you can initialize and configure at the same time:
