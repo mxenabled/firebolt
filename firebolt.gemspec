@@ -21,6 +21,7 @@ Gem::Specification.new do |spec|
   ##
   # Dependencies
   #
+  spec.add_dependency "json"
   spec.add_dependency "rufus-scheduler"
   spec.add_dependency "sucker_punch"
 
