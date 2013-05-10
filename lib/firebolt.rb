@@ -9,8 +9,9 @@ require "firebolt/cache_worker"
 require "firebolt/config"
 require "firebolt/warmer"
 require "firebolt/file_warmer"
-
 require "firebolt/version"
+
+require "firebolt/railtie" if defined?(::Rails::Railtie)
 
 module Firebolt
   extend ::Firebolt::Cache
