@@ -41,8 +41,7 @@ module Firebolt
   end
 
   def self.initialize_rufus_scheduler
-
-    frequency = ::Rufus.to_time_string(config.frequency)
+    frequency = ::Rufus.to_time_string(config.warming_frequency)
 
     ::Rufus::Scheduler.start_new.every(frequency) do
       ::SuckerPunch::Queue[:firebolt_queue].async.perform(config.warmer)
@@ -54,9 +53,9 @@ module Firebolt
 
     configure(&block) if block_given?
 
-    raise "Firebolt.config.frequency has not been set" unless config.frequency
-    raise "Firebolt.config.warmer has not been set" unless config.warmer
     raise "Firebolt.config.cache has not been set" unless config.cache
+    raise "Firebolt.config.warmer has not been set" unless config.warmer
+    raise "Firebolt.config.warming_frequency has not been set" unless config.warming_frequency
 
     configure_sucker_punch
     initialize_rufus_scheduler

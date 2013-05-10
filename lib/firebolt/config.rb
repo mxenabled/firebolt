@@ -43,7 +43,7 @@ module Firebolt
       end
     end
 
-    hash_accessor :cache, :frequency, :cache_file_enabled, :cache_file_path, :namespace, :warmer
+    hash_accessor :cache, :cache_file_enabled, :cache_file_path, :namespace, :warmer, :warming_frequency
 
     ##
     # Public instance methods
