@@ -20,24 +20,9 @@ Or install it yourself as:
 
 ## Usage
 
-Firebolt uses a cache warmer that you create. Valid cache warmers must:
+To use Firebolt, you first need to configure it.
 
-1. Include `Firebolt::Warmer`
-2. Define a `perform` method that returns a hash
-
-Here's an example:
-
-```Ruby
-class YourAwesomeCacheWarmer
-  include ::Firebolt::Warmer
-
-  def perform
-    # Returns a hash. The keys become the cache keys and the values become cache values.
-  end
-end
-```
-
-To use Firebolt, you first need to configure it:
+#### Configure & Initialize!
 
 ```Ruby
 ::Firebolt.configure do |config|
@@ -69,7 +54,30 @@ Then you need to initialize it:
 end
 ```
 
-More documentation coming soon...
+#### Warming the cache
+
+Firebolt uses a cache warmer that you create. Valid cache warmers must:
+
+1. Include `Firebolt::Warmer`
+2. Define a `perform` method that returns a hash
+
+Here's an example:
+
+```Ruby
+class YourAwesomeCacheWarmer
+  include ::Firebolt::Warmer
+
+  def perform
+    # Returns a hash. The keys become the cache keys and the values become cache values.
+  end
+end
+```
+
+#### The file warmer
+
+Firebolt is built to be fast and unobtrusive, but sometimes warming a cache can take some time. That's where the file warmer comes in. When the file warmer is enabled, after warming the cache, Firebolt will write the cached data to a file. The next time your app starts up, it will warm the cache from the file. Each subsequent warming happens with your custom warmer.
+
+To use file warmer, simply set the `cache_file_enabled` and `cache_file_path` config options.
 
 ## Contributing
 
