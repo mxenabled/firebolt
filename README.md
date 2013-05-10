@@ -54,6 +54,14 @@ Then you need to initialize it:
 end
 ```
 
+#### Reading cached data
+
+Firebolt provides two methods for retrieving cached data: `Firebolt.read` & `Firebolt.fetch`.
+
+`Firebolt.read` takes your cache key and return the value from the cache.
+
+`Firebolt.fetch` does the same thing, but also takes an optional block that is called when there is a cache miss.
+
 #### Warming the cache
 
 Firebolt uses a cache warmer that you create. Valid cache warmers must:
@@ -72,6 +80,10 @@ class YourAwesomeCacheWarmer
   end
 end
 ```
+
+Firebolt uses this warmer to re-warm the cache at the frequency you configure (e.g. `config.warming_frequency`). If it's set to re-warm every 12 hours, Firebolt will warm the cache every twelve hours.
+
+Under the hood, Firebolt keeps track of the current cache set. That way, it's able to warm a new cache set and swap it with the old cache set in place, avoiding cache misses.
 
 #### The file warmer
 
