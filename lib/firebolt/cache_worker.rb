@@ -24,7 +24,7 @@ module Firebolt
     end
 
     def write_results_to_cache_file?
-      ::Firebolt.config.cache_file_enabled?
+      ::Firebolt.config.use_file_warmer?
     end
   end
 end
