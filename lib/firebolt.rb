@@ -50,7 +50,8 @@ module Firebolt
   end
 
   def self.initialize!(&block)
-    return if initialized?
+    return if initialized? || skip_warming?
+
     configure(&block) if block_given?
 
     raise "Firebolt.config.frequency has not been set" unless config.frequency
@@ -81,4 +82,7 @@ module Firebolt
     !! @initialized
   end
 
+  def self.skip_warming?
+    ENV['FIREBOLT_SKIP_WARMING'] || ENV['RAILS_ENV'] == 'test'
+  end
 end
