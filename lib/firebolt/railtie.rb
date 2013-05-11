@@ -5,14 +5,14 @@ module Firebolt
     initializer "firebolt.rails.configuration" do |app|
       # Configure Firebolt
       ::Firebolt.configure do |config|
+        # Set defaults based on Rails
+        config.cache = ::Rails.cache
+        config.cache_file_path = ::File.join(::Rails.root, 'tmp')
+
         app.config.firebolt.each do |config_key, config_value|
           config_setter = "#{config_key}="
           config.__send__(config_setter, config_value) if config.respond_to?(config_setter)
         end
-
-        # Set defaults based on Rails
-        config.cache ||= ::Rails.cache
-        config.cache_file_path ||= ::File.join(::Rails.root, 'tmp')
       end
     end
 
