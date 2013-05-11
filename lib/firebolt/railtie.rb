@@ -1,5 +1,7 @@
 module Firebolt
   class Railtie < Rails::Railtie
+    config.firebolt = ::ActiveSupport::OrderedOptions.new
+
     initializer "firebolt.rails.configuration" do |app|
       # Configure Firebolt
       ::Firebolt.configure do |config|
