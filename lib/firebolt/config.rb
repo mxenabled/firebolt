@@ -43,7 +43,7 @@ module Firebolt
       end
     end
 
-    hash_accessor :cache, :frequency, :cache_file_enabled, :cache_file_path, :namespace, :warmer
+    hash_accessor :cache, :cache_file_enabled, :cache_file_path, :namespace, :warmer, :warming_frequency
 
     ##
     # Public instance methods
@@ -60,6 +60,7 @@ module Firebolt
     def cache_file_path=(path)
       raise ArgumentError, "Directory '#{path}' does not exist or is not writable." unless ::File.writable?(path)
 
+      self[:cache_file_enabled] = true
       self[:cache_file_path] = path
     end
 
@@ -69,6 +70,10 @@ module Firebolt
 
     def namespace
       @namespace ||= "firebolt.#{self[:namespace]}"
+    end
+
+    def use_file_warmer?
+      cache_file_enabled? && cache_file_readable?
     end
 
     def warmer=(value)

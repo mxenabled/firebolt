@@ -20,7 +20,7 @@ module Firebolt
     # Private instance methods
     #
     def _warmer_expires_in
-      @_warmer_expires_in ||= ::Firebolt.config.frequency + 1.hour
+      @_warmer_expires_in ||= ::Firebolt.config.warming_frequency + 1.hour
     end
 
     def _warmer_raise_failed_result

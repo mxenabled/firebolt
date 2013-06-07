@@ -9,8 +9,9 @@ require "firebolt/cache_worker"
 require "firebolt/config"
 require "firebolt/warmer"
 require "firebolt/file_warmer"
-
 require "firebolt/version"
+
+require "firebolt/railtie" if defined?(::Rails::Railtie)
 
 module Firebolt
   extend ::Firebolt::Cache
@@ -41,27 +42,28 @@ module Firebolt
   end
 
   def self.initialize_rufus_scheduler
+    return if config.warming_frequency.nil?
 
-    frequency = ::Rufus.to_time_string(config.frequency)
+    warming_frequency = ::Rufus.to_time_string(config.warming_frequency)
 
-    ::Rufus::Scheduler.start_new.every(frequency) do
+    ::Rufus::Scheduler.start_new.every(warming_frequency) do
       ::SuckerPunch::Queue[:firebolt_queue].async.perform(config.warmer)
     end
   end
 
   def self.initialize!(&block)
-    return if initialized?
+    return if initialized? || skip_warming?
+
     configure(&block) if block_given?
 
-    raise "Firebolt.config.frequency has not been set" unless config.frequency
-    raise "Firebolt.config.warmer has not been set" unless config.warmer
     raise "Firebolt.config.cache has not been set" unless config.cache
+    raise "Firebolt.config.warmer has not been set" unless config.warmer
 
     configure_sucker_punch
     initialize_rufus_scheduler
 
     # Initial warming
-    warmer = config.cache_file_readable? ? ::Firebolt::FileWarmer : config.warmer
+    warmer = config.use_file_warmer? ? ::Firebolt::FileWarmer : config.warmer
     ::SuckerPunch::Queue[:firebolt_queue].async.perform(warmer)
 
     initialized!
@@ -81,4 +83,7 @@ module Firebolt
     !! @initialized
   end
 
+  def self.skip_warming?
+    ENV['FIREBOLT_SKIP_WARMING'] || ENV['RAILS_ENV'] == 'test'
+  end
 end
