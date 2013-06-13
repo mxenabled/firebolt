@@ -5,14 +5,14 @@ namespace :firebolt do
   namespace :cache do
 
     desc 'Rebuild the cache by purging and re-warming'
-    task :rebuild do
+    task :rebuild => :environment do
       ::Rake::Task['firebolt:cache:purge'].invoke
       ::Rake::Task['firebolt:cache:warm'].invoke
       puts 'Cache rebuilt'
     end
 
     desc 'Purge the cache and startup file'
-    task :purge do
+    task :purge => :environment do
       pattern = ::Firebolt.cache_key_with_salt('*', ::Firebolt.salt)
       puts "Purging keys matching pattern '#{pattern}'"
       ::Firebolt.config.cache.delete_matched(pattern)
@@ -25,7 +25,7 @@ namespace :firebolt do
     end
 
     desc 'Warm the cache with a new salt'
-    task :warm do
+    task :warm => :environment do
       ::Firebolt.initialize!
       warmer = ::Firebolt.config.warmer
       puts "Warming the cache with #{warmer}"
