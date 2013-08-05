@@ -2,6 +2,13 @@ module Firebolt
   module Cache
     include ::Firebolt::Keys
 
+    def delete(key_suffix, options = nil)
+      salted_key = self.cache_key_with_salt(key_suffix, salt)
+      return nil if salted_key.nil?
+
+      ::Firebolt.config.cache.delete(salted_key, options)
+    end
+
     def fetch(suffix, options = nil, &block)
       salted_key = self.cache_key_with_salt(key_suffix, salt)
       return nil if salted_key.nil?
