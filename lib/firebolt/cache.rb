@@ -23,5 +23,13 @@ module Firebolt
     def salt
       ::Firebolt.config.cache.read(self.salt_key)
     end
+
+    def write(key_suffix, value, options = nil)
+      salted_key = self.cache_key_with_salt(key_suffix, salt)
+      return nil if salted_key.nil?
+
+      options.merge!(:expires_in => ::Firebolt.config.warming_frequency + 1.hour)
+      ::Firebolt.config.cache.write(salted_key, value, options)
+    end
   end
 end
