@@ -31,7 +31,7 @@ module Firebolt
       ::Firebolt.config.cache.read(self.salt_key)
     end
 
-    def write(key_suffix, value, options = nil)
+    def write(key_suffix, value, options = {})
       salted_key = self.cache_key_with_salt(key_suffix, salt)
       return nil if salted_key.nil?
 
