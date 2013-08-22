@@ -1,3 +1,5 @@
+require 'firebolt/warmer'
+
 module Firebolt
   class FileWarmer
     include ::Firebolt::Warmer

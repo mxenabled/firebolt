@@ -5,10 +5,10 @@ require "rufus/scheduler"
 
 require "firebolt/keys"
 require "firebolt/cache"
-require "firebolt/cache_worker"
 require "firebolt/config"
-require "firebolt/warmer"
 require "firebolt/file_warmer"
+require "firebolt/warm_cache_job"
+require "firebolt/warmer"
 require "firebolt/version"
 
 require "firebolt/railtie" if defined?(::Rails::Railtie)
@@ -35,19 +35,13 @@ module Firebolt
     end
   end
 
-  def self.configure_sucker_punch
-    ::SuckerPunch.config do
-      queue :name => :firebolt_queue, :worker => ::Firebolt::CacheWorker, :workers => 2
-    end
-  end
-
   def self.initialize_rufus_scheduler
     return if config.warming_frequency.nil?
 
     warming_frequency = ::Rufus.to_time_string(config.warming_frequency)
 
     ::Rufus::Scheduler.start_new.every(warming_frequency) do
-      ::SuckerPunch::Queue[:firebolt_queue].async.perform(config.warmer)
+      ::Firebolt::WarmCacheJob.new.async.perform(config.warmer)
     end
   end
 
@@ -59,12 +53,11 @@ module Firebolt
     raise "Firebolt.config.cache has not been set" unless config.cache
     raise "Firebolt.config.warmer has not been set" unless config.warmer
 
-    configure_sucker_punch
     initialize_rufus_scheduler
 
     # Initial warming
     warmer = config.use_file_warmer? ? ::Firebolt::FileWarmer : config.warmer
-    ::SuckerPunch::Queue[:firebolt_queue].async.perform(warmer)
+    ::Firebolt::WarmCacheJob.new.async.perform(config.warmer)
 
     initialized!
   end

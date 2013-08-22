@@ -3,7 +3,6 @@ require 'fileutils'
 
 namespace :firebolt do
   namespace :cache do
-
     desc 'Rebuild the cache by purging and re-warming'
     task :rebuild => :environment do
       ::Rake::Task['firebolt:cache:purge'].invoke
@@ -29,8 +28,7 @@ namespace :firebolt do
       ::Firebolt.initialize!
       warmer = ::Firebolt.config.warmer
       puts "Warming the cache with #{warmer}"
-      ::SuckerPunch::Queue[:firebolt_queue].perform(warmer)
+      ::Firebolt::WarmCacheJob.new.perform(warmer)
     end
-
   end
 end
