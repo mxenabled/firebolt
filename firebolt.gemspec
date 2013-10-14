@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   # Dependencies
   #
   spec.add_dependency "json"
-  spec.add_dependency "rufus-scheduler"
+  spec.add_dependency "rufus-scheduler", "~> 3.0"
   spec.add_dependency "sucker_punch", ">= 1.0"
 
   ##
