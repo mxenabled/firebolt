@@ -38,9 +38,10 @@ module Firebolt
   def self.initialize_rufus_scheduler
     return if config.warming_frequency.nil?
 
-    warming_frequency = ::Rufus.to_time_string(config.warming_frequency)
+    warming_frequency = config.warming_frequency.to_s
 
-    ::Rufus::Scheduler.start_new.every(warming_frequency) do
+    scheduler = ::Rufus::Scheduler.new
+    scheduler.every(warming_frequency) do
       ::Firebolt::WarmCacheJob.new.async.perform(config.warmer)
     end
   end
