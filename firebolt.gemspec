@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   #
   spec.add_dependency "json"
   spec.add_dependency "rufus-scheduler", "~> 3.0"
-  spec.add_dependency "concurrent-ruby", "~> 1.0.0.pre5"
+  spec.add_dependency "concurrent-ruby", "~> 1.0"
 
   ##
   # Development Dependencies
