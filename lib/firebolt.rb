@@ -58,9 +58,7 @@ module Firebolt
 
     # Initial warming
     warmer = config.use_file_warmer? ? ::Firebolt::FileWarmer : config.warmer
-    # Should the argument be `warmer` and not `config.warmer`?
-    #::Firebolt::WarmCacheJob.new.async.perform(config.warmer)
-    Concurrent::Future.execute { ::Firebolt::WarmCacheJob.new.perform(config.warmer) }
+    ::Concurrent::Future.execute { ::Firebolt::WarmCacheJob.new.perform(warmer) }
 
     initialized!
   end
