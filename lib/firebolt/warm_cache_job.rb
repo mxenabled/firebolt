@@ -1,6 +1,5 @@
 module Firebolt
   class WarmCacheJob
-    include ::SuckerPunch::Job
 
     def perform(warmer_class)
       cache_warmer = warmer_class.new

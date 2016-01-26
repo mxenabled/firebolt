@@ -1,6 +1,6 @@
 require "json"
 require "securerandom"
-require "sucker_punch"
+require "concurrent"
 require "rufus/scheduler"
 
 require "firebolt/keys"
@@ -58,7 +58,9 @@ module Firebolt
 
     # Initial warming
     warmer = config.use_file_warmer? ? ::Firebolt::FileWarmer : config.warmer
-    ::Firebolt::WarmCacheJob.new.async.perform(config.warmer)
+    # Should the argument be `warmer` and not `config.warmer`?
+    #::Firebolt::WarmCacheJob.new.async.perform(config.warmer)
+    Concurrent::Future.execute { ::Firebolt::WarmCacheJob.new.perform(config.warmer) }
 
     initialized!
   end
