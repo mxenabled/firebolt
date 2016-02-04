@@ -1,3 +1,6 @@
+require "active_support"
+require "active_support/core_ext/numeric"
+
 require "json"
 require "securerandom"
 require "concurrent"
