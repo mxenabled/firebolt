@@ -1,6 +1,7 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
 require "firebolt"
+require "pry"
 
 RSpec.configure do
   def mock_firebolt_cache!

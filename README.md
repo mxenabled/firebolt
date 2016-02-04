@@ -2,7 +2,7 @@
 
 Firebolt is a simple cache warmer. It warms the cache using a specially defined warmer class.
 
-It's not quite ready for Prime Time™ and needs specs (YIKES!). Feel free add some, if you like...
+It's not quite ready for Prime Time™.
 
 ## Installation
 
