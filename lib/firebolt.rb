@@ -6,8 +6,6 @@ require "rufus/scheduler"
 require "firebolt/keys"
 require "firebolt/cache"
 require "firebolt/config"
-require "firebolt/file_warmer"
-require "firebolt/warm_cache_job"
 require "firebolt/warmer"
 require "firebolt/version"
 
@@ -42,7 +40,7 @@ module Firebolt
 
     scheduler = ::Rufus::Scheduler.new
     scheduler.every(warming_frequency) do
-      ::Firebolt::WarmCacheJob.new.perform(config.warmer)
+      config.warmer.new.warm
     end
   end
 
@@ -57,8 +55,7 @@ module Firebolt
     initialize_rufus_scheduler
 
     # Initial warming
-    warmer = config.use_file_warmer? ? ::Firebolt::FileWarmer : config.warmer
-    ::Concurrent::Future.execute { ::Firebolt::WarmCacheJob.new.perform(config.warmer) }
+    ::Concurrent::Future.execute { config.warmer.new.warm }
 
     initialized!
   end

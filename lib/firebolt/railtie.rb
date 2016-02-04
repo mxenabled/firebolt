@@ -7,7 +7,6 @@ module Firebolt
       ::Firebolt.configure do |config|
         # Set defaults based on Rails
         config.cache = ::Rails.cache
-        config.cache_file_path = ::File.join(::Rails.root, 'tmp')
 
         app.config.firebolt.each do |config_key, config_value|
           config_setter = "#{config_key}="
