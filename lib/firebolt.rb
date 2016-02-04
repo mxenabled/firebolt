@@ -6,8 +6,6 @@ require "rufus/scheduler"
 require "firebolt/keys"
 require "firebolt/cache"
 require "firebolt/config"
-require "firebolt/file_warmer"
-require "firebolt/warm_cache_job"
 require "firebolt/warmer"
 require "firebolt/version"
 
@@ -17,20 +15,20 @@ module Firebolt
   extend ::Firebolt::Cache
 
   # Using a mutex to control access while creating a ::Firebolt::Config
-  @firebolt_mutex = ::Mutex.new
+  FIREBOLT_MUTEX = ::Mutex.new
 
   def self.config
     return @config unless @config.nil?
 
-    @firebolt_mutex.synchronize do
-      @config = ::Firebolt::Config.new if @config.nil?
+    FIREBOLT_MUTEX.synchronize do
+      @config ||= ::Firebolt::Config.new
     end
 
-    return @config
+    @config
   end
 
   def self.configure
-    ::Thread.exclusive do
+    FIREBOLT_MUTEX.synchronize do
       yield(config)
     end
   end
@@ -42,7 +40,7 @@ module Firebolt
 
     scheduler = ::Rufus::Scheduler.new
     scheduler.every(warming_frequency) do
-      ::Firebolt::WarmCacheJob.new.async.perform(config.warmer)
+      config.warmer.new.warm
     end
   end
 
@@ -57,8 +55,7 @@ module Firebolt
     initialize_rufus_scheduler
 
     # Initial warming
-    warmer = config.use_file_warmer? ? ::Firebolt::FileWarmer : config.warmer
-    ::Concurrent::Future.execute { ::Firebolt::WarmCacheJob.new.perform(warmer) }
+    ::Concurrent::Future.execute { config.warmer.new.warm }
 
     initialized!
   end
@@ -66,11 +63,11 @@ module Firebolt
   def self.initialized!
     return @initialized unless @initialized.nil?
 
-    @firebolt_mutex.synchronize do
-      @initialized = true if @initialized.nil?
+    FIREBOLT_MUTEX.synchronize do
+      @initialized ||= true
     end
 
-    return @initialized
+    @initialized
   end
 
   def self.initialized?

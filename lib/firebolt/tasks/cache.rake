@@ -10,17 +10,11 @@ namespace :firebolt do
       puts 'Cache rebuilt'
     end
 
-    desc 'Purge the cache and startup file'
+    desc 'Purge the cache'
     task :purge => :environment do
       pattern = ::Firebolt.cache_key_with_salt('*', ::Firebolt.salt)
       puts "Purging keys matching pattern '#{pattern}'"
       ::Firebolt.config.cache.delete_matched(pattern)
-
-      if ::Firebolt.config.cache_file_readable?
-        cache_file = ::Firebolt.config.cache_file
-        puts "Removing cache file at '#{cache_file}'"
-        ::FileUtils.rm(cache_file)
-      end
     end
 
     desc 'Warm the cache with a new salt'
@@ -28,7 +22,7 @@ namespace :firebolt do
       ::Firebolt.initialize!
       warmer = ::Firebolt.config.warmer
       puts "Warming the cache with #{warmer}"
-      ::Firebolt::WarmCacheJob.new.perform(warmer)
+      warmer.new.warm
     end
   end
 end

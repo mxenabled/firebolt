@@ -1,14 +1,11 @@
 module Firebolt
   class Config < Hash
-    CACHE_FILENAME = "firebolt.cache.json".freeze
-
     ##
     # Constructor!
     #
     def initialize(options = {})
       merge!(options)
 
-      self[:cache_file_path] ||= '/tmp'
       self[:namespace] ||= ::SecureRandom.hex
     end
 
@@ -43,37 +40,14 @@ module Firebolt
       end
     end
 
-    hash_accessor :cache, :cache_file_enabled, :cache_file_path, :namespace, :warmer, :warming_frequency
+    hash_accessor :cache, :namespace, :warmer, :warming_frequency
 
     ##
     # Public instance methods
     #
 
-    def cache_file
-      ::File.join(self[:cache_file_path], CACHE_FILENAME)
-    end
-
-    def cache_file_enabled?
-      !! ::Firebolt.config.cache_file_enabled
-    end
-
-    def cache_file_path=(path)
-      raise ArgumentError, "Directory '#{path}' does not exist or is not writable." unless ::File.writable?(path)
-
-      self[:cache_file_enabled] = true
-      self[:cache_file_path] = path
-    end
-
-    def cache_file_readable?
-      ::File.readable?(cache_file)
-    end
-
     def namespace
       @namespace ||= "firebolt.#{self[:namespace]}"
-    end
-
-    def use_file_warmer?
-      cache_file_enabled? && cache_file_readable?
     end
 
     def warmer=(value)
