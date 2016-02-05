@@ -18,6 +18,7 @@ module Firebolt
 
   # Using a mutex to control access while creating a ::Firebolt::Config
   FIREBOLT_MUTEX = ::Mutex.new
+  CONFIGURE_MUTEX = ::Mutex.new
 
   def self.config
     return @config unless @config.nil?
@@ -30,7 +31,7 @@ module Firebolt
   end
 
   def self.configure
-    FIREBOLT_MUTEX.synchronize do
+    CONFIGURE_MUTEX.synchronize do
       yield(config)
     end
   end
