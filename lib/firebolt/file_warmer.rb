@@ -7,7 +7,7 @@ module Firebolt
     def perform
       return nil unless cache_file_exists?
 
-      return parsed_contents
+      parsed_contents
     end
 
   private
