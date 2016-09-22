@@ -51,18 +51,20 @@ module Firebolt
   end
 
   def self.initialize!(&block)
-    return if initialized? || skip_warming?
+    return if initialized?
 
     configure(&block) if block_given?
 
     raise "Firebolt.config.cache has not been set" unless config.cache
     raise "Firebolt.config.warmer has not been set" unless config.warmer
 
-    initialize_rufus_scheduler
+    unless skip_warming?
+      initialize_rufus_scheduler
 
-    # Initial warming
-    warmer = config.use_file_warmer? ? ::Firebolt::FileWarmer : config.warmer
-    ::Concurrent::Future.execute { ::Firebolt::WarmCacheJob.new.perform(warmer) }
+      # Initial warming
+      warmer = config.use_file_warmer? ? ::Firebolt::FileWarmer : config.warmer
+      ::Concurrent::Future.execute { ::Firebolt::WarmCacheJob.new.perform(warmer) }
+    end
 
     initialized!
   end
@@ -82,6 +84,6 @@ module Firebolt
   end
 
   def self.skip_warming?
-    ENV['FIREBOLT_SKIP_WARMING'] || ENV['RAILS_ENV'] == 'test'
+    ENV['FIREBOLT_SKIP_WARMING'] || ENV['RAILS_ENV'] == 'test' || config.skip_warming == true
   end
 end
