@@ -32,7 +32,7 @@ To use Firebolt, you first need to configure it.
   config.warmer = ::YourAwesomeCacheWarmer
 
   # Optional
-  config.cache_file_enabled = true # Automatically enabled when cache_file_path is set
+  config.cache_file_enabled = true
   config.cache_file_path = '/path/to/your/project/tmp' # Defaults to /tmp
 end
 ```
